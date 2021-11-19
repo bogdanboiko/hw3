@@ -1,10 +1,10 @@
 package com.example.hw3.model
 
-sealed class ItemView() {
-    class FirstUser(val message: Message) : ItemView()
+sealed class ItemType() {
+    class FirstUser(val message: Message) : ItemType()
 
-    class SecondUser(val message: Message) : ItemView()
+    class SecondUser(val message: Message) : ItemType()
 
-    class HeaderUserList(var counterFirstUser: Int, var counterSecondUser: Int) : ItemView()
+    class HeaderUserList(var counterFirstUser: Int, var counterSecondUser: Int) : ItemType()
 }
 
