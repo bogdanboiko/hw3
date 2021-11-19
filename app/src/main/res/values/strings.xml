@@ -1,4 +1,6 @@
 <resources>
     <string name="app_name">HW3</string>
     <string name="submit">Submit</string>
+    <string name="user_1">User 1</string>
+    <string name="user_2">User 2</string>
 </resources>
