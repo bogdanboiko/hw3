@@ -13,6 +13,8 @@ import com.example.hw3.model.ItemType
 
 interface UserChangeClickListener {
     fun userClick(user: Int, binding: HeaderUsersItemBinding)
+
+    fun itemLongPress(item: ItemType, user: Int)
 }
 
 class ChatAdapter(
@@ -38,26 +40,35 @@ class ChatAdapter(
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder) {
-            is LeftMessageHolder -> holder.bind((currentList[position]) as ItemType.FirstUser)
-            is RightMessageHolder -> holder.bind((currentList[position]) as ItemType.SecondUser)
+            is LeftMessageHolder -> holder.bind((currentList[position]) as ItemType.FirstUser, position)
+            is RightMessageHolder -> holder.bind((currentList[position]) as ItemType.SecondUser, position)
             is UsersHolder -> holder.bind(currentList[position] as ItemType.HeaderUserList)
         }
         Log.e("e", currentList.toString())
+        Log.e("e", position.toString())
     }
 
     inner class LeftMessageHolder(private val binding: LeftItemBinding)
         : RecyclerView.ViewHolder(binding.root) {
-        fun bind(userData: ItemType.FirstUser) {
+        fun bind(userData: ItemType.FirstUser, position: Int) {
             val text = userData.message.messageId.toString() + ": " + userData.message.message
             binding.leftMessageTextView.text = text
+            binding.leftMessageTextView.setOnLongClickListener {
+                userListener.itemLongPress(userData, VIEW_TYPE_FIRST_USER)
+                return@setOnLongClickListener true
+            }
         }
     }
 
     inner class RightMessageHolder(private val binding: RightItemBinding)
         : RecyclerView.ViewHolder(binding.root) {
-        fun bind(userData: ItemType.SecondUser) {
+        fun bind(userData: ItemType.SecondUser, position: Int) {
             val text = userData.message.messageId.toString() + ": " + userData.message.message
             binding.rightMessageTextView.text = text
+            binding.rightMessageTextView.setOnLongClickListener {
+                userListener.itemLongPress(userData, VIEW_TYPE_SECOND_USER)
+                return@setOnLongClickListener true
+            }
         }
     }
 
@@ -79,10 +90,6 @@ class ChatAdapter(
                 secondUserButton.text = "User 2: ${userData.counterSecondUser}"
             }
         }
-    }
-
-    override fun getItemCount(): Int {
-        return currentList.size
     }
 
     companion object  {
