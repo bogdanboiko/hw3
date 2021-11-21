@@ -1,6 +1,5 @@
 package com.example.hw3.adapter
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -13,16 +12,19 @@ import com.example.hw3.model.ItemType
 class ChatAdapter : androidx.recyclerview.widget.ListAdapter<ItemType, RecyclerView.ViewHolder>(diff) {
     override fun getItemViewType(position: Int): Int {
         return when (currentList[position]) {
-            is ItemType.FirstUser -> 0
-            is ItemType.SecondUser -> 1
-            is ItemType.HeaderUserList -> 2
+            is ItemType.FirstUser -> VIEW_TYPE_MESSAGE_LEFT
+            is ItemType.SecondUser -> VIEW_TYPE_MESSAGE_RIGHT
+            is ItemType.HeaderUserList -> VIEW_TYPE_HEADER_USERS
         }
     }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
-            0 -> LeftMessageHolder(LeftItemBinding.inflate(LayoutInflater.from(parent.context), parent, false))
-            1 -> RightMessageHolder(RightItemBinding.inflate(LayoutInflater.from(parent.context), parent, false))
-            else -> UsersHolder(HeaderUsersItemBinding.inflate(LayoutInflater.from(parent.context), parent, false))
+            VIEW_TYPE_MESSAGE_LEFT ->
+                LeftMessageHolder(LeftItemBinding.inflate(LayoutInflater.from(parent.context), parent, false))
+            VIEW_TYPE_MESSAGE_RIGHT ->
+                RightMessageHolder(RightItemBinding.inflate(LayoutInflater.from(parent.context), parent, false))
+            else ->
+                UsersHolder(HeaderUsersItemBinding.inflate(LayoutInflater.from(parent.context), parent, false))
         }
     }
 
@@ -57,19 +59,25 @@ class ChatAdapter : androidx.recyclerview.widget.ListAdapter<ItemType, RecyclerV
         }
     }
 
-    companion object diff : DiffUtil.ItemCallback<ItemType>() {
-        override fun areItemsTheSame(oldItem: ItemType, newItem: ItemType): Boolean {
-            return oldItem == newItem
-        }
+    companion object  {
+        val diff = object : DiffUtil.ItemCallback<ItemType>() {
+            override fun areItemsTheSame(oldItem: ItemType, newItem: ItemType): Boolean {
+                return oldItem == newItem
+            }
 
-        override fun areContentsTheSame(oldItem: ItemType, newItem: ItemType): Boolean {
-            return when (oldItem) {
-                is ItemType.FirstUser -> oldItem.message == (newItem as ItemType.FirstUser).message
-                is ItemType.SecondUser -> oldItem.message == (newItem as ItemType.SecondUser).message
-                is ItemType.HeaderUserList ->
-                    (oldItem.counterFirstUser == (newItem as ItemType.HeaderUserList).counterFirstUser
-                            && oldItem.counterSecondUser == newItem.counterSecondUser)
+            override fun areContentsTheSame(oldItem: ItemType, newItem: ItemType): Boolean {
+                return when (oldItem) {
+                    is ItemType.FirstUser -> oldItem.message == (newItem as ItemType.FirstUser).message
+                    is ItemType.SecondUser -> oldItem.message == (newItem as ItemType.SecondUser).message
+                    is ItemType.HeaderUserList ->
+                        (oldItem.counterFirstUser == (newItem as ItemType.HeaderUserList).counterFirstUser
+                                && oldItem.counterSecondUser == newItem.counterSecondUser)
+                }
             }
         }
+
+        const val VIEW_TYPE_MESSAGE_LEFT = 0
+        const val VIEW_TYPE_MESSAGE_RIGHT = 1
+        const val VIEW_TYPE_HEADER_USERS = 2
     }
 }
