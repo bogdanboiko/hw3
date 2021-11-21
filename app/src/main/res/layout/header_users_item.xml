@@ -10,6 +10,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="@string/user_1"
+        app:backgroundTint="#0027FF"
         app:layout_constraintEnd_toStartOf="@+id/secondUserButton"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -19,6 +20,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="@string/user_2"
+        app:backgroundTint="#FF0000"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/firstUserButton"
         app:layout_constraintTop_toTopOf="parent" />
