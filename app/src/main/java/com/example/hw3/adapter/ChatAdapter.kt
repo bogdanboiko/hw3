@@ -40,18 +40,16 @@ class ChatAdapter(
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder) {
-            is LeftMessageHolder -> holder.bind((currentList[position]) as ItemType.FirstUser, position)
-            is RightMessageHolder -> holder.bind((currentList[position]) as ItemType.SecondUser, position)
+            is LeftMessageHolder -> holder.bind((currentList[position]) as ItemType.FirstUser)
+            is RightMessageHolder -> holder.bind((currentList[position]) as ItemType.SecondUser)
             is UsersHolder -> holder.bind(currentList[position] as ItemType.HeaderUserList)
         }
-        Log.e("e", currentList.toString())
-        Log.e("e", position.toString())
     }
 
     inner class LeftMessageHolder(private val binding: LeftItemBinding)
         : RecyclerView.ViewHolder(binding.root) {
-        fun bind(userData: ItemType.FirstUser, position: Int) {
-            val text = userData.message.messageId.toString() + ": " + userData.message.message
+        fun bind(userData: ItemType.FirstUser) {
+            val text = "User 1: " + userData.message.message
             binding.leftMessageTextView.text = text
             binding.leftMessageTextView.setOnLongClickListener {
                 userListener.itemLongPress(userData, VIEW_TYPE_FIRST_USER)
@@ -62,8 +60,8 @@ class ChatAdapter(
 
     inner class RightMessageHolder(private val binding: RightItemBinding)
         : RecyclerView.ViewHolder(binding.root) {
-        fun bind(userData: ItemType.SecondUser, position: Int) {
-            val text = userData.message.messageId.toString() + ": " + userData.message.message
+        fun bind(userData: ItemType.SecondUser) {
+            val text = "User 2: " + userData.message.message
             binding.rightMessageTextView.text = text
             binding.rightMessageTextView.setOnLongClickListener {
                 userListener.itemLongPress(userData, VIEW_TYPE_SECOND_USER)

@@ -12,5 +12,9 @@
         android:background="#F42E20"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        />
+        android:layout_marginEnd="10dp"
+        android:padding="5dp"
+        android:ellipsize="none"
+        android:scrollHorizontally="false"
+        tools:ignore="RtlCompat" />
 </androidx.constraintlayout.widget.ConstraintLayout>

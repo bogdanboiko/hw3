@@ -1,13 +1,14 @@
 package com.example.hw3
 
+import android.content.DialogInterface
 import android.graphics.Color
 import android.os.Bundle
-import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.example.hw3.adapter.ChatAdapter
 import com.example.hw3.adapter.UserChangeClickListener
 import com.example.hw3.databinding.ActivityMainBinding
 import com.example.hw3.databinding.HeaderUsersItemBinding
+import com.example.hw3.decorator.MessageDecorator
 import com.example.hw3.model.ItemType
 import com.example.hw3.model.Message
 
@@ -22,6 +23,7 @@ class MainActivity : AppCompatActivity(), UserChangeClickListener {
      override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
          binding = ActivityMainBinding.inflate(layoutInflater)
+
          binding.submitButton.setOnClickListener {
              onSubmitClick()
          }
@@ -30,7 +32,7 @@ class MainActivity : AppCompatActivity(), UserChangeClickListener {
          setContentView(binding.root)
     }
 
-    fun onSubmitClick() {
+    private fun onSubmitClick() {
         if (binding.messageEditText.text.isEmpty()) {
             return
         }
@@ -49,6 +51,7 @@ class MainActivity : AppCompatActivity(), UserChangeClickListener {
     private fun initAdapter() {
         binding.recyclerViewContainer.apply {
             adapter = baseAdapter
+            addItemDecoration(MessageDecorator(20))
         }
 
         baseAdapter.submitList(messages.toList())
@@ -76,23 +79,27 @@ class MainActivity : AppCompatActivity(), UserChangeClickListener {
         builder.setMessage("Do you want to delete message?")
             .setPositiveButton("Yes"
             ) { dialog, _ ->
-
-                when (user) {
-                    ChatAdapter.VIEW_TYPE_FIRST_USER ->
-                        messages.remove(item as ItemType.FirstUser).also { firstUserMessageCount-- }
-                    ChatAdapter.VIEW_TYPE_SECOND_USER ->
-                        messages.remove(item as ItemType.SecondUser).also { secondUserMessageCount-- }
-                }
-
-                updateCounters()
-                baseAdapter.submitList(messages.toList())
-                dialog.dismiss()
+                dialogYesClick(item, user, dialog)
             }
             .setNegativeButton("No"
             ) { dialog, _ ->
                 dialog.dismiss()
             }
+
         builder.show()
+    }
+
+    private fun dialogYesClick(item: ItemType, user: Int, dialog: DialogInterface) {
+        when (user) {
+            ChatAdapter.VIEW_TYPE_FIRST_USER ->
+                messages.remove(item as ItemType.FirstUser).also { firstUserMessageCount-- }
+            ChatAdapter.VIEW_TYPE_SECOND_USER ->
+                messages.remove(item as ItemType.SecondUser).also { secondUserMessageCount-- }
+        }
+
+        updateCounters()
+        baseAdapter.submitList(messages.toList())
+        dialog.dismiss()
     }
 
     private fun updateCounters() {
