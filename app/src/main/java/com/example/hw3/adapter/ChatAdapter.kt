@@ -1,7 +1,7 @@
 package com.example.hw3.adapter
 
 import android.annotation.SuppressLint
-import android.util.Log
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -12,6 +12,8 @@ import com.example.hw3.databinding.RightItemBinding
 import com.example.hw3.model.ItemType
 
 interface UserChangeClickListener {
+    var currentUser: Int
+
     fun userClick(user: Int, binding: HeaderUsersItemBinding)
 
     fun itemLongPress(item: ItemType, user: Int)
@@ -74,6 +76,11 @@ class ChatAdapter(
         : RecyclerView.ViewHolder(binding.root) {
         @SuppressLint("SetTextI18n")
         fun bind(userData: ItemType.HeaderUserList) {
+            if (userListener.currentUser == VIEW_TYPE_SECOND_USER) {
+                binding.firstUserButton.setBackgroundColor(Color.RED)
+                binding.secondUserButton.setBackgroundColor(Color.BLUE)
+            }
+
             with(binding) {
                 firstUserButton.setOnClickListener {
                     userListener.userClick(VIEW_TYPE_FIRST_USER, binding)

@@ -15,7 +15,7 @@ import com.example.hw3.model.Message
 class MainActivity : AppCompatActivity(), UserChangeClickListener {
     private lateinit var binding: ActivityMainBinding
     private val baseAdapter = ChatAdapter(this as UserChangeClickListener)
-    private var currentUser = 0
+    override var currentUser = ChatAdapter.VIEW_TYPE_FIRST_USER
     private var firstUserMessageCount = 0
     private var secondUserMessageCount = 0
     private var messages = mutableListOf<ItemType>(ItemType.HeaderUserList(0, 0))
@@ -43,6 +43,7 @@ class MainActivity : AppCompatActivity(), UserChangeClickListener {
             else -> ItemType.SecondUser(Message(secondUserMessageCount++, binding.messageEditText.text.toString()))
         }
 
+        binding.messageEditText.text.clear()
         updateCounters()
         messages.add(userMessage)
         baseAdapter.submitList(messages.toList())
